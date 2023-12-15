@@ -4,6 +4,7 @@ using MarcosVinicius.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarcosVinicius.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231215005226_RelItemNota")]
+    partial class RelItemNota
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,20 +54,26 @@ namespace MarcosVinicius.Migrations
                     b.Property<int>("IdProduto")
                         .HasColumnType("int");
 
+                    b.Property<int>("NotaDeVendaId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Percentual")
                         .HasColumnType("int");
 
                     b.Property<double>("Preco")
                         .HasColumnType("float");
 
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdNotaDeVenda");
+                    b.HasIndex("NotaDeVendaId");
 
-                    b.HasIndex("IdProduto");
+                    b.HasIndex("ProdutoId");
 
                     b.ToTable("Itens");
                 });
@@ -153,9 +161,6 @@ namespace MarcosVinicius.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MarcaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");
 
@@ -166,8 +171,6 @@ namespace MarcosVinicius.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MarcaId");
 
                     b.ToTable("Produtos");
                 });
@@ -259,13 +262,13 @@ namespace MarcosVinicius.Migrations
                 {
                     b.HasOne("MarcosVinicius.Models.NotaDeVenda", "NotaDeVenda")
                         .WithMany()
-                        .HasForeignKey("IdNotaDeVenda")
+                        .HasForeignKey("NotaDeVendaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MarcosVinicius.Models.Produto", "Produto")
                         .WithMany()
-                        .HasForeignKey("IdProduto")
+                        .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -293,17 +296,6 @@ namespace MarcosVinicius.Migrations
                     b.Navigation("Transportadora");
 
                     b.Navigation("Vendedor");
-                });
-
-            modelBuilder.Entity("MarcosVinicius.Models.Produto", b =>
-                {
-                    b.HasOne("MarcosVinicius.Models.Marca", "Marca")
-                        .WithMany()
-                        .HasForeignKey("MarcaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Marca");
                 });
 #pragma warning restore 612, 618
         }

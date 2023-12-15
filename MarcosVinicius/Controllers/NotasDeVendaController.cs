@@ -1,4 +1,8 @@
 #nullable disable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +22,7 @@ namespace MarcosVinicius.Controllers
         // GET: NotasDeVenda
         public async Task<IActionResult> Index()
         {
-            var myDbContext = _context.NotasDeVenda.Include(n => n.Cliente);
+            var myDbContext = _context.NotasDeVenda.Include(n => n.Cliente).Include(n => n.Transportadora).Include(n => n.Vendedor);
             return View(await myDbContext.ToListAsync());
         }
 
@@ -32,6 +36,8 @@ namespace MarcosVinicius.Controllers
 
             var notaDeVenda = await _context.NotasDeVenda
                 .Include(n => n.Cliente)
+                .Include(n => n.Transportadora)
+                .Include(n => n.Vendedor)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (notaDeVenda == null)
             {
@@ -44,7 +50,9 @@ namespace MarcosVinicius.Controllers
         // GET: NotasDeVenda/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "Id", "Nome");
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "Id", "Id");
+            ViewData["IdTransportadora"] = new SelectList(_context.Transportadoras, "Id", "Id");
+            ViewData["IdVendedor"] = new SelectList(_context.Vendedores, "Id", "Id");
             return View();
         }
 
@@ -53,7 +61,7 @@ namespace MarcosVinicius.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tipo,IdCliente")] NotaDeVenda notaDeVenda)
+        public async Task<IActionResult> Create([Bind("Id,Tipo,IdCliente,IdVendedor,IdTransportadora")] NotaDeVenda notaDeVenda)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +70,8 @@ namespace MarcosVinicius.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "Id", "Id", notaDeVenda.IdCliente);
+            ViewData["IdTransportadora"] = new SelectList(_context.Transportadoras, "Id", "Id", notaDeVenda.IdTransportadora);
+            ViewData["IdVendedor"] = new SelectList(_context.Vendedores, "Id", "Id", notaDeVenda.IdVendedor);
             return View(notaDeVenda);
         }
 
@@ -79,6 +89,8 @@ namespace MarcosVinicius.Controllers
                 return NotFound();
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "Id", "Id", notaDeVenda.IdCliente);
+            ViewData["IdTransportadora"] = new SelectList(_context.Transportadoras, "Id", "Id", notaDeVenda.IdTransportadora);
+            ViewData["IdVendedor"] = new SelectList(_context.Vendedores, "Id", "Id", notaDeVenda.IdVendedor);
             return View(notaDeVenda);
         }
 
@@ -87,7 +99,7 @@ namespace MarcosVinicius.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tipo,IdCliente")] NotaDeVenda notaDeVenda)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Tipo,IdCliente,IdVendedor,IdTransportadora")] NotaDeVenda notaDeVenda)
         {
             if (id != notaDeVenda.Id)
             {
@@ -115,6 +127,8 @@ namespace MarcosVinicius.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "Id", "Id", notaDeVenda.IdCliente);
+            ViewData["IdTransportadora"] = new SelectList(_context.Transportadoras, "Id", "Id", notaDeVenda.IdTransportadora);
+            ViewData["IdVendedor"] = new SelectList(_context.Vendedores, "Id", "Id", notaDeVenda.IdVendedor);
             return View(notaDeVenda);
         }
 
@@ -128,6 +142,8 @@ namespace MarcosVinicius.Controllers
 
             var notaDeVenda = await _context.NotasDeVenda
                 .Include(n => n.Cliente)
+                .Include(n => n.Transportadora)
+                .Include(n => n.Vendedor)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (notaDeVenda == null)
             {

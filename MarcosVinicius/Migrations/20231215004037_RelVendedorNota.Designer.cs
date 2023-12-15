@@ -4,6 +4,7 @@ using MarcosVinicius.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarcosVinicius.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231215004037_RelVendedorNota")]
+    partial class RelVendedorNota
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,12 +48,6 @@ namespace MarcosVinicius.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("IdNotaDeVenda")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdProduto")
-                        .HasColumnType("int");
-
                     b.Property<int>("Percentual")
                         .HasColumnType("int");
 
@@ -62,10 +58,6 @@ namespace MarcosVinicius.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdNotaDeVenda");
-
-                    b.HasIndex("IdProduto");
 
                     b.ToTable("Itens");
                 });
@@ -100,9 +92,6 @@ namespace MarcosVinicius.Migrations
                     b.Property<int?>("IdCliente")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdTransportadora")
-                        .HasColumnType("int");
-
                     b.Property<int?>("IdVendedor")
                         .HasColumnType("int");
 
@@ -112,8 +101,6 @@ namespace MarcosVinicius.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdCliente");
-
-                    b.HasIndex("IdTransportadora");
 
                     b.HasIndex("IdVendedor");
 
@@ -153,9 +140,6 @@ namespace MarcosVinicius.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MarcaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");
 
@@ -166,8 +150,6 @@ namespace MarcosVinicius.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MarcaId");
 
                     b.ToTable("Produtos");
                 });
@@ -255,34 +237,11 @@ namespace MarcosVinicius.Migrations
                     b.HasDiscriminator().HasValue("PagamentoComCheque");
                 });
 
-            modelBuilder.Entity("MarcosVinicius.Models.Item", b =>
-                {
-                    b.HasOne("MarcosVinicius.Models.NotaDeVenda", "NotaDeVenda")
-                        .WithMany()
-                        .HasForeignKey("IdNotaDeVenda")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MarcosVinicius.Models.Produto", "Produto")
-                        .WithMany()
-                        .HasForeignKey("IdProduto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NotaDeVenda");
-
-                    b.Navigation("Produto");
-                });
-
             modelBuilder.Entity("MarcosVinicius.Models.NotaDeVenda", b =>
                 {
                     b.HasOne("MarcosVinicius.Models.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("IdCliente");
-
-                    b.HasOne("MarcosVinicius.Models.Transportadora", "Transportadora")
-                        .WithMany()
-                        .HasForeignKey("IdTransportadora");
 
                     b.HasOne("MarcosVinicius.Models.Vendedor", "Vendedor")
                         .WithMany()
@@ -290,20 +249,7 @@ namespace MarcosVinicius.Migrations
 
                     b.Navigation("Cliente");
 
-                    b.Navigation("Transportadora");
-
                     b.Navigation("Vendedor");
-                });
-
-            modelBuilder.Entity("MarcosVinicius.Models.Produto", b =>
-                {
-                    b.HasOne("MarcosVinicius.Models.Marca", "Marca")
-                        .WithMany()
-                        .HasForeignKey("MarcaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Marca");
                 });
 #pragma warning restore 612, 618
         }

@@ -22,6 +22,14 @@
                 <select asp-for="IdCliente" class ="form-control" asp-items="ViewBag.IdCliente"></select>
             </div>
             <div class="form-group">
+                <label asp-for="IdVendedor" class="control-label"></label>
+                <select asp-for="IdVendedor" class ="form-control" asp-items="ViewBag.IdVendedor"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdTransportadora" class="control-label"></label>
+                <select asp-for="IdTransportadora" class ="form-control" asp-items="ViewBag.IdTransportadora"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
